@@ -11,9 +11,10 @@ $ARGV[0] or die $usage;
 open( FILE, $ARGV[0] ) || die "Can't open $ARGV[0]: $!\n";
 while( my $file_line = <FILE> ){
   if( $file_line =~ /charset/i ){
+    # print "FILE LINE: $file_line";
     parse_charset( $file_line );
     while( my $char_line = <FILE> ){
-      $char_line =~ /;/ and last;
+      # print "CHAR LINE: $char_line";
       parse_charset( $char_line );
     }
   }
@@ -33,12 +34,12 @@ sub parse_charset{
   
   my @chars = split( /\s+/, $line );
   
-  print $line;
   foreach my $range ( @chars ){
     $range =~ /[a-zA-Z]/ and next; # skip if letters
     $range =~ /[\[\]]/   and next; # skip if brackets
     $range =~ /^$/       and next; # skip if blank line
     $range =~ /=/        and next; # skip if equal sign
+    $range =~ /\d+/      or  next; # skip if equal sign
     
     # character range, not a single position
     if( $range =~ /-/ ){
