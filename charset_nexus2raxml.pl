@@ -9,14 +9,15 @@ $ARGV[0] or die $usage;
 
 #parse file
 open( FILE, $ARGV[0] ) || die "Can't open $ARGV[0]: $!\n";
-while( my $line = <FILE> ){
+while( my $file_line = <FILE> ){
   
-  if( $line =~ /charset/i ){
-    while( <FILE> ){
-      $line =~ s/- /-/g;
-      $line =~ s/ -/-/g;
+  if( $file_line =~ /charset/i ){
+    while( my $char_line = <FILE> ){
+      # print $char_line;
+      $char_line =~ s/- /-/g;
+      $char_line =~ s/ -/-/g;
     
-      my @chars = split( /\s+/, $line );
+      my @chars = split( /\s+/, $char_line );
 
       foreach my $range ( @chars ){
 	$range =~ /[a-zA-Z]/ and next; # skip if letters
@@ -37,7 +38,7 @@ while( my $line = <FILE> ){
 	  print "$range\-$range\n";
 	}
       }
-      $line =~ /;/ and last;
+      $char_line =~ /;/ and last;
     }
   }
 }
