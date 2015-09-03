@@ -11,32 +11,35 @@ $ARGV[0] or die $usage;
 open( FILE, $ARGV[0] ) || die "Can't open $ARGV[0]: $!\n";
 while( my $line = <FILE> ){
   
-  $line =~ s/- /-/g;
-  $line =~ s/ -/-/g;
+  if( $line =~ /charset/i ){
+    while( <FILE> ){
+      $line =~ s/- /-/g;
+      $line =~ s/ -/-/g;
     
-  my @chars = split( /\s+/, $line );
+      my @chars = split( /\s+/, $line );
 
-  foreach my $char ( @chars ){
-    $char =~ /[a-zA-Z]/ and next;  # skip if letters
-    $char =~ /[\[\]]/ and next;    # skip if brackets
-    $char =~ /^$/ and next;        # skip if blank line
-    $char =~ /=/ and next;        # skip if equal sign
+      foreach my $range ( @chars ){
+	$range =~ /[a-zA-Z]/ and next; # skip if letters
+	$range =~ /[\[\]]/ and next;   # skip if brackets
+	$range =~ /^$/ and next;       # skip if blank line
+	$range =~ /=/ and next;        # skip if equal sign
+	
+	# character range, not a single position
+	if( $range =~ /-/ ){
+	  $range =~ s/\s//g; #get rid of whitespace
+	  $range =~ s/;//g;  #get rid of any semicolons, leaving just the coord
+	  print $range, "\n";
 
-    # character range, not a single position
-    if( $char =~ /-/ ){
-      $char =~ s/\s//g; #get rid of whitespace
-      $char =~ s/;//g;  #get rid of any semicolons, leaving just the coord
-      print $char, "\n";
-
-    # else no dash, so it's a single site, not a range
-    }else{
-      $char =~ s/\s+//g;  #get rid of whitespace
-      $char =~ s/;//;     #get rid of any semicolons, leaving just the coord
-      print "$char\-$char\n";
-
+	  # else no dash, so it's a single site, not a range
+	}else{
+	  $range =~ s/\s+//g;  #get rid of whitespace
+	  $range =~ s/;//;     #get rid of any semicolons, leaving just the coord
+	  print "$range\-$range\n";
+	}
+      }
+      $line =~ /;/ and last;
     }
   }
-  
 }
 
 
