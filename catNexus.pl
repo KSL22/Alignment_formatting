@@ -159,7 +159,7 @@ print $matrix;
 # print footers, PAUP block, charsets
 print ";\nEND;\n\n";
 print "BEGIN PAUP;\n\n";
-print "\tSET increase=auto autoclose=yes notifybeep=no tcompress=yes showtaxnum=yes taxlabels=full warnreset=no warntree=no warnroot=no maxtrees=50000 outroot=mono;\n";
+print "\tSET increase=auto autoclose=yes notifybeep=no tcompress=yes torder=right showtaxnum=yes taxlabels=full warnreset=no warntree=no warnroot=no maxtrees=50000 outroot=mono;\n";
 if( $OUTGROUP){
   print "\tOUTGROUP $OUTGROUP;\n\n";
 }else{
